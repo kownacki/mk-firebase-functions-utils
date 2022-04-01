@@ -7,7 +7,7 @@ const sendMail = async (body, options) => {
   await mailTransport.sendMail({
     to: options.mailOptions.to,
     replyTo: body.email,
-    subject: `${options.mailOptions.subject} | ${body.email}`,
+    subject: options.mailOptions.subject,
     html: options.mailOptions.getHtml(body),
   });
 };
