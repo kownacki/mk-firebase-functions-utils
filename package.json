@@ -2,8 +2,24 @@
   "name": "mk-firebase-functions-utils",
   "version": "0.1.0",
   "private": true,
+  "exports": {
+    "./*": {
+      "types": "./lib/*.d.ts",
+      "default": "./lib/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json"
+  },
   "dependencies": {
+    "@types/nodemailer": "^6.4.4",
     "cors": "^2.8.5",
     "nodemailer": "^6.7.3"
+  },
+  "peerDependencies": {
+    "firebase-functions": "^3.19.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
   }
 }
