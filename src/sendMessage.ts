@@ -1,33 +1,25 @@
 import {Request, Response} from 'firebase-functions';
 import {createTransport, SendMailOptions} from 'nodemailer';
-import {corsAsync as corsAsyncLib} from './corsAsync';
+// @ts-ignore see https://github.com/microsoft/TypeScript/issues/33079
+import {corsAsync as corsAsyncLib} from 'mk-firebase-functions-utils/corsAsync';
 const corsAsync = corsAsyncLib({origin: true});
 
 export interface SendMessageOptions {
   mailOptions: {
+    from?: SendMailOptions['from'],
     to: SendMailOptions['to'],
-    replyTo: SendMailOptions['replyTo'],
+    replyTo?: SendMailOptions['replyTo'],
     subject: string,
     html: string,
   },
-  mailTransport: {
-    auth: {
-      pass: string,
-      user: string,
-    },
-    service: string,
-  }
+  // Too many combinations. Refer to nodemailer documentation
+  mailTransport: any,
   maxMessageSize: number,
 }
 
 const sendMail = async (options: SendMessageOptions) => {
   const transporter = createTransport(options.mailTransport);
-  await transporter.sendMail({
-    to: options.mailOptions.to,
-    replyTo: options.mailOptions.replyTo,
-    subject: options.mailOptions.subject,
-    html: options.mailOptions.html,
-  });
+  await transporter.sendMail(options.mailOptions);
 };
 
 export const sendMessage = async (req: Request, res: Response, options: SendMessageOptions): Promise<Response<any> | void> => {
